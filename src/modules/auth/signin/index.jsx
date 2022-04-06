@@ -11,12 +11,17 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { withRouter } from "react-router-dom";
 import * as yup from "yup";
+import { useFormik } from "formik";
+import { useDispatch } from "react-redux";
 
 import { styles } from "./styles";
-import { useFormik } from "formik";
+import { signin } from "../../../redux/session.reducer";
+import { post } from "../../../core/service/api";
+import { openSnackBar } from "../../../redux/snackbar.reducer";
 
 const SignIn = () => {
   const classes = styles();
+  const dispatch = useDispatch();
 
   const validationSchema = yup.object({
     email: yup
@@ -35,7 +40,11 @@ const SignIn = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {},
+    onSubmit: async (values) => {
+      const response = await post("auth/signin", values);
+      if (typeof response === "string") dispatch(openSnackBar(response));
+      if (typeof response === "object") dispatch(signin());
+    },
   });
 
   return (
@@ -95,8 +104,7 @@ const SignIn = () => {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs> 
-            </Grid>
+            <Grid item xs></Grid>
             <Grid item>
               <Link href="signup" variant="body2">
                 {"Don't have an account? Sign Up"}

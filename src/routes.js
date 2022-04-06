@@ -10,21 +10,21 @@ import { CircularProgress } from "@material-ui/core";
 const Routes = () => {
   return (
     <Suspense fallback={<CircularProgress />}>
-    <BrowserRouter>
-      <Switch>
-        <Menu>
-          <Route path="/" exact>
-            <SignIn />
-          </Route>
-          <Route path="/signin" exact>
-            <SignIn />
-          </Route>
-          <Route path="/signup" exact>
-            <SignUp />
-          </Route>
-        </Menu>
-      </Switch>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Switch>
+          <Menu>
+            <Route path="/" exact>
+              <SignIn />
+            </Route>
+            <Route path="/signin" exact>
+              <SignIn />
+            </Route>
+            <Route path="/signup" exact>
+              <SignUp />
+            </Route>
+          </Menu>
+        </Switch>
+      </BrowserRouter>
     </Suspense>
   );
 };

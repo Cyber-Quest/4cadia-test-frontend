@@ -12,19 +12,23 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { openSnackBar } from "../../../redux/snackbar.reducer";
+import { useDispatch } from "react-redux";
+import { post } from "../../../core/service/api";
+import { useHistory } from "react-router-dom";
 
 import { styles } from "./styles";
 
 export default function SignUp() {
   const classes = styles();
+  const dispatch = useDispatch();
+  let history = useHistory();
 
   const validationSchema = yup.object({
-    name: yup
-      .string("Enter your name") 
-      .required("Name is required"),
+    name: yup.string("Enter your name").required("Name is required"),
     lastName: yup
-    .string("Enter your last name") 
-    .required("Last name is required"),
+      .string("Enter your last name")
+      .required("Last name is required"),
     email: yup
       .string("Enter your email")
       .email("Enter a valid email")
@@ -43,7 +47,18 @@ export default function SignUp() {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {},
+    onSubmit: async (values) => {
+      values.username = `${values.name} ${values.lastName}`;
+      delete values.name;
+      delete values.lastName;
+
+      const response = await post("auth/signup", values);
+      if (typeof response === "string") dispatch(openSnackBar(response));
+      if (typeof response === "object") {
+        dispatch(openSnackBar("User created successfully!"));
+        history.push("signin");
+      }
+    },
   });
   return (
     <Container component="main" maxWidth="xs">
@@ -85,10 +100,12 @@ export default function SignUp() {
                 id="lastName"
                 label="Last Name"
                 name="lastName"
-                autoComplete="lname" 
+                autoComplete="lname"
                 value={formik.values.lastName}
                 onChange={formik.handleChange}
-                error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                error={
+                  formik.touched.lastName && Boolean(formik.errors.lastName)
+                }
                 helperText={formik.touched.name && formik.errors.lastName}
               />
             </Grid>
