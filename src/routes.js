@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
 import { Switch } from "react-router-dom";
-import BalancePanel from "./modules/dashboard/balance-panel/balance-panel";
 import { BrowserRouter } from "react-router-dom";
 import { CircularProgress } from "@material-ui/core";
 import { useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import { useSelector } from "react-redux";
 import SignIn from "./modules/auth/signin";
 import SignUp from "./modules/auth/signup";
 import Menu from "../src/core/menu/index";
+import BalancePanel from "./modules/dashboard/balance-panel/";
 
 import PrivateRoute from "./core/private-route";
 import PublicRoute from "./core/public-route";

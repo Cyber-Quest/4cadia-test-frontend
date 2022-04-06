@@ -12,14 +12,15 @@ import persistStore from "redux-persist/es/persistStore";
 //Reducers
 import session from "./redux/session.reducer";
 import snackbar from "./redux/snackbar.reducer";
+import drawer from "./redux/drawer.reducer";
 
-const reducers = combineReducers({ session, snackbar });
+const reducers = combineReducers({ session, snackbar, drawer });
 
 const persistConfig = {
   key: "4cadia_front",
   storage,
   blacklist: [
-     'snackbar'
+     'snackbar', 'drawer'
   ],
 };
 const persistedReducer = persistReducer(persistConfig, reducers);

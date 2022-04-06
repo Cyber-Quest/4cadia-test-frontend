@@ -13,7 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeSnackBar } from "../../redux/snackbar.reducer";
 import { logout } from "../../redux/session.reducer";
 
-import { styles } from "./styles"; 
+import { styles } from "./styles";
+import Drawer from "../drawer";
+import { closeDrawer } from "../../redux/drawer.reducer";
 
 const Copyright = () => {
   return (
@@ -33,6 +35,7 @@ const Menu = ({ children }) => {
   const dispatch = useDispatch();
   const snackbar = useSelector((state) => state.snackbar);
   const session = useSelector((state) => state.session);
+  const drawer = useSelector((state) => state.drawer);
 
   const close = () => {
     dispatch(closeSnackBar());
@@ -51,8 +54,21 @@ const Menu = ({ children }) => {
     </React.Fragment>
   );
 
+  const onClose = () => {
+    dispatch(closeDrawer());
+  };
+
   return (
     <div className={classes.root}>
+      <Drawer
+        {...drawer}
+        anchor="right"
+        open={drawer.visibility}
+        title={drawer.title}
+        onClose={onClose}
+      >
+        {drawer.body}
+      </Drawer>
       <Snackbar
         open={snackbar.visible || false}
         anchorOrigin={{ horizontal: "right", vertical: "top" }}
@@ -63,7 +79,7 @@ const Menu = ({ children }) => {
       />
       {session.isAuth ? (
         <AppBar position="static">
-          <Toolbar>
+          <Toolbar className={classes.toolbar}>
             <Typography variant="h6" className={classes.title}>
               4CADIA
             </Typography>
@@ -80,7 +96,7 @@ const Menu = ({ children }) => {
         </AppBar>
       ) : null}
 
-      <Container component="main" maxWidth="xs">
+      <Container component="main" className={classes.main}>
         {children}
         <Box mt={5}>
           <Copyright />
