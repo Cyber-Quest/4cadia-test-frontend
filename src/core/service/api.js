@@ -7,8 +7,7 @@ const Api = axios.create({
 });
 
 const Config = (config) => {
-  const user_token = JSON.parse(localStorage.getItem("user_token"));
-
+  const user_token = localStorage.getItem("user_token");
   if (user_token) {
     config.headers.Authorization = "Bearer " + user_token;
   }
@@ -23,6 +22,15 @@ export const post = async (route, values) => {
     return data;
   } catch (err) {
     return err.response.data.message;
+  }
+};
+
+export const get = async (route, config) => {
+  try {
+    const { data } = await Api.get(route, config);
+    return data;
+  } catch (err) {
+    return err;
   }
 };
 

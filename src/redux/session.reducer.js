@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit"; 
 
 export const session = createSlice({
   name: "session",
@@ -6,8 +6,10 @@ export const session = createSlice({
     isAuth: false,
   },
   reducers: {
-    signin: (state) => {
+    signin: (state, action) => {
+      const { token } = action.payload;
       state.isAuth = true;
+      localStorage.setItem("user_token", token);
     },
     logout: (state, action) => {
       state.isAuth = false;
@@ -16,6 +18,6 @@ export const session = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { signin, logout, } = session.actions;
+export const { signin, logout } = session.actions;
 
 export default session.reducer;

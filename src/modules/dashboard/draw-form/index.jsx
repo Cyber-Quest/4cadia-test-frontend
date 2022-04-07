@@ -9,8 +9,9 @@ import { post } from "../../../core/service/api";
 import { openSnackBar } from "../../../redux/snackbar.reducer";
 
 import { styles } from "./styles";
+import { closeDrawer } from "../../../redux/drawer.reducer";
 
-const DrawForm = () => {
+const DrawForm = ({accountSelected='', setLoadingPage}) => {
   const classes = styles();
   const dispatch = useDispatch();
 
@@ -20,14 +21,21 @@ const DrawForm = () => {
   });
 
   const formik = useFormik({
-    initialValues: {
+    initialValues: { 
       amount: "",
-      password: "",
+      description: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-    /*   const response = await post("", values);
-      if (typeof response === "string") dispatch(openSnackBar(response)); */
+      values.amount = parseFloat(values.amount);
+      values["type"] = "draw";
+      const response = await post(`transaction/draw/${accountSelected}`, values);
+      if (typeof response === "string") dispatch(openSnackBar(response));
+      if (typeof response === "object") {
+        dispatch(openSnackBar("Draw realized successfully"))
+        dispatch(closeDrawer());
+        setLoadingPage(true);
+      }
     },
   });
 
@@ -53,7 +61,8 @@ const DrawForm = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            id="outlined-textarea"
+            id="description"
+            name="description"
             label="Description"
             placeholder="Description"
             multiline

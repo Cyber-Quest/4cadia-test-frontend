@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React  from "react";
 import Button from "../../../core/button/index";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -9,27 +9,45 @@ import { post } from "../../../core/service/api";
 import { openSnackBar } from "../../../redux/snackbar.reducer";
 
 import { styles } from "./styles";
-import { FormControl, InputLabel, OutlinedInput, Select } from "@material-ui/core";
+import {
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  Select,
+} from "@material-ui/core";
+import { closeDrawer } from "../../../redux/drawer.reducer";
 
-const BankAccountForm = () => {
-  let refTypeAccount = useRef()
+const BankAccountForm = ({setLoadingPage}) => { 
   const classes = styles();
   const dispatch = useDispatch();
 
   const validationSchema = yup.object({
-    name: yup.string("Enter the name"),
+    name: yup.string("Enter the name").required("name is required"),
     balance: yup.number("Enter the balance").required("balance is required"),
+    dailyWithdrawalLimit: yup
+      .number("Enter the daily with drawal limit")
+      .required("Daily with drawal limit is required"),
+    accountType: yup.string().required("account type is required"),
   });
 
   const formik = useFormik({
     initialValues: {
+      name: "",
       balance: "",
-      password: "",
+      dailyWithdrawalLimit: "",
+      accountType: "corrente",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      /*   const response = await post("", values);
-      if (typeof response === "string") dispatch(openSnackBar(response)); */
+      values.balance = parseFloat(values.balance)
+      values.dailyWithdrawalLimit = parseFloat(values.dailyWithdrawalLimit)
+      const response = await post("account", values); 
+      if (typeof response === "string") dispatch(openSnackBar(response));
+      if (typeof response === "object") {
+        dispatch(openSnackBar("Account created successfully"))
+        dispatch(closeDrawer());
+        setLoadingPage(true);
+      }
     },
   });
 
@@ -94,29 +112,26 @@ const BankAccountForm = () => {
           />
         </Grid>
         <Grid item xs={12}>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel
-            ref={ref => {
-              refTypeAccount= ref;
-            }}
-            htmlFor="outlined-age-native-simple"
-          >
-            Age
-          </InputLabel>
-          <Select
-            native 
-            input={
-              <OutlinedInput
-                name="age"
-                labelWidth={30}
-                id="outlined-age-native-simple"
-              />
-            }
-          >
-            <option value="corrente">Corrente</option>
-            <option value="poupança">Poupança</option> 
-          </Select>
-        </FormControl>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel 
+              htmlFor="outlined-age-native-simple"
+            >
+              Account type
+            </InputLabel>
+            <Select
+              native
+              input={
+                <OutlinedInput
+                  name="accountType"
+                  labelWidth={100}
+                  id="outlined-age-native-simple"
+                />
+              }
+            >
+              <option value="corrente">Corrente</option>
+              <option value="poupança">Poupança</option>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={8}></Grid>
         <Grid item xs={4}>
@@ -127,7 +142,7 @@ const BankAccountForm = () => {
             color="primary"
             className={classes.submit}
           >
-            BankAccount
+            Create
           </Button>
         </Grid>
       </Grid>

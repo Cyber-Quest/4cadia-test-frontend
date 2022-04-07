@@ -9,8 +9,12 @@ import { post } from "../../../core/service/api";
 import { openSnackBar } from "../../../redux/snackbar.reducer";
 
 import { styles } from "./styles";
+import { closeDrawer } from "../../../redux/drawer.reducer";
 
-const DepositForm = () => {
+const DepositForm = ({
+  accountSelected = '',
+  setLoadingPage
+}) => {
   const classes = styles();
   const dispatch = useDispatch();
 
@@ -18,16 +22,23 @@ const DepositForm = () => {
     amount: yup.number("Enter the amount").required("amount is required"),
     description: yup.string("Enter the description"),
   });
-
+ 
   const formik = useFormik({
     initialValues: {
       amount: "",
-      password: "",
+      description: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-    /*   const response = await post("", values);
-      if (typeof response === "string") dispatch(openSnackBar(response)); */
+      values.amount = parseFloat(values.amount);
+      values["type"] = "deposit";
+      const response = await post(`transaction/deposit/${accountSelected}`, values);
+      if (typeof response === "string") dispatch(openSnackBar(response)); 
+      if (typeof response === "object") {
+        dispatch(openSnackBar("Deposit created successfully"))
+        dispatch(closeDrawer());
+        setLoadingPage(true);
+      }
     },
   });
 
@@ -53,7 +64,8 @@ const DepositForm = () => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            id="outlined-textarea"
+            id="description"
+            name="description"
             label="Description"
             placeholder="Description"
             multiline

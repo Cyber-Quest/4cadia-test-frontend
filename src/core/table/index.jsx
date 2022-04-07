@@ -7,6 +7,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { dataFormat, numberToCurrency } from "../utils/convert-values";
 
 const styles = {
   root: {
@@ -18,27 +19,11 @@ const styles = {
   },
 };
 
-const dataFormat =(date) =>{
-  var newDate = new Date(date),
-      day  = newDate.getDate().toString().padStart(2, '0'),
-      month  = (newDate.getMonth()+1).toString().padStart(2, '0'),
-      year  = newDate.getFullYear();
-  return day+"/"+month+"/"+year;
-}
-
-const data = [
-  {
-    amount: 10,
-    description: "test",
-    type: "deposit",
-    created_at: dataFormat("2022-04-05T15:30:43.219Z"),
-    nameAccount: "teste",
-  },
-];
 
 const CustomTable = (props) => {
   const { classes } = props;
 
+  
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -52,15 +37,15 @@ const CustomTable = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((n, index) => (
+          {props.data.map((n, index) => (
             <TableRow key={index}>
               <TableCell component="th" scope="row">
-                {n.created_at}
+                {dataFormat(n.created_at)}
               </TableCell>
               <TableCell >{n.description}</TableCell>
               <TableCell align="right">{n.type}</TableCell>
-              <TableCell align="right">R${n.amount}</TableCell>
-              <TableCell align="right">{n.nameAccount}</TableCell>
+              <TableCell align="right">{numberToCurrency(n.amount)}</TableCell>
+              <TableCell align="right">{n.account.name}</TableCell>
             </TableRow>
           ))}
         </TableBody>

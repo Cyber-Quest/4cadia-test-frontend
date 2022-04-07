@@ -43,7 +43,7 @@ const SignIn = () => {
     onSubmit: async (values) => {
       const response = await post("auth/signin", values);
       if (typeof response === "string") dispatch(openSnackBar(response));
-      if (typeof response === "object") dispatch(signin());
+      if (typeof response === "object") dispatch(signin(response));
     },
   });
 
