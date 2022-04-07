@@ -1,10 +1,10 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://pbs.twimg.com/profile_images/1157284387945422848/Xx-SXfR2_400x400.jpg" width="320" alt="Nest Logo" /></a>
+ <img src="https://pbs.twimg.com/profile_images/1157284387945422848/Xx-SXfR2_400x400.jpg" width="320" alt="Nest Logo" />
 </p>
 
 ## Description
 
-Evaluative test frontend 4cadia created with nestjs.
+Evaluative test frontend 4cadia created with reactjs.
 
 ## Installation
 
